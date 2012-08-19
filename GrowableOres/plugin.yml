@@ -1,0 +1,14 @@
+name: GrowableOres
+main: me.Todkommt.GrowableOres.GrowableOres
+version: 0.9
+website: http://www.bukkit.org
+author: Todkommt
+description: >
+             Growable Ores
+permissions:
+    growableores.plant:
+        description: Permission to plant an OrePlant.
+        default: op
+    growableores.harvest:
+        description: Permission to harvest an OrePlant.
+        default: op

@@ -1,0 +1,29 @@
+config:
+    disableOres:
+    - iron
+    - gold
+    perPlayer: true
+prices:
+    coal: 4
+    iron: 4
+    diamond: 4
+    gold: 4
+    redstone: 20
+    emerald: 4
+    lapis: 20
+growheights:
+    coal: 3
+    iron: 3
+    diamond: 3
+    gold: 3
+    redstone: 3
+    emerald: 3
+    lapis: 3
+growtimes:
+    coal: 5.0f
+    iron: 15.0f
+    diamond: 60.0f
+    gold: 40.0f
+    redstone: 30.0f
+    emerald: 120.0f
+    lapis: 20.0f
