@@ -2,6 +2,7 @@
 .classpath
 .project
 org.eclipse.jdt.core.prefs
+.settings
 
 # Package Files #
 *.jar
