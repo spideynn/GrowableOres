@@ -1,4 +1,4 @@
-package me.Todkommt.GrowableOres;
+package net.spideynn.bukkit.growableores;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -14,11 +14,11 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class GrowableOres extends JavaPlugin {
 
-	public static GrowableOres instance;
-	public EventManager eventListener;
-	public List<OrePlant> plants = new ArrayList<OrePlant>();
-	public Logger log;
-	
+	static GrowableOres instance;
+	private EventManager eventListener;
+	List<OrePlant> plants = new ArrayList<OrePlant>();
+	Logger log;
+
 	public void onEnable()
 	{
 		instance = this;
@@ -33,22 +33,16 @@ public class GrowableOres extends JavaPlugin {
 			plant.startGrowing();
 		}
 		getServer().getPluginManager().registerEvents(eventListener, this);
-		try {
-		    Metrics metrics = new Metrics(this);
-		    metrics.start();
-		} catch (IOException e) {
-		    log.info("Failed to submit plugin stats");
-		}
 		log.info(" v" + getDescription().getVersion() + " enabled.");
 	}
-	
+
 	public void onDisable()
 	{
 		savePlants();
 		log.info(" disabled.");
 	}
-	
-	public void savePlants()
+
+	void savePlants()
 	{
 		File file = new File("plugins/GrowableOres/plants.dat");
 		if(!file.exists())
@@ -68,9 +62,9 @@ public class GrowableOres extends JavaPlugin {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@SuppressWarnings("unchecked")
-	public void loadPlants()
+	private void loadPlants()
 	{
 		File file = new File("plugins/GrowableOres/plants.dat");
 		if(file.exists())

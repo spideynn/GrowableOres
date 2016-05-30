@@ -1,4 +1,4 @@
-package me.Todkommt.GrowableOres;
+package net.spideynn.bukkit.growableores;
 
 import java.io.Serializable;
 
@@ -6,17 +6,19 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitScheduler;
 
 public class OrePlant implements Serializable {
 
 	private static final long serialVersionUID = -2231010396344601094L;
-	public SerializableBlock base;
-	public SerializableBlock[] grownBlocks;
-	public long timeElapsed;
-	public boolean stoppedBeforeMaxHeight = false;
-	public String planter;
-	public float growTime;
-	public GrowTimer timer;
+	SerializableBlock base;
+	SerializableBlock[] grownBlocks;
+	long timeElapsed;
+    Thread thread;
+	String planter;
+	private float growTime;
+	GrowTimer timer;
 	
 	public OrePlant(Block base, int growHeight, float growTime, String planter)
 	{
@@ -27,25 +29,22 @@ public class OrePlant implements Serializable {
 		startGrowing();
 	}
 	
-	public void startGrowing()
+	void startGrowing()
 	{
 		//GrowableOres.instance.log.info("starting to grow");
 		timer = new GrowTimer(growTime, this, timeElapsed);
-		Thread thread = new Thread(timer);
+		thread = new Thread(timer);
 		thread.start();
 	}
-	
-	public void grow(GrowTimer timer)
+	void grow(GrowTimer timer)
 	{
 		//GrowableOres.instance.log.info("growing ore plant");
 		timer.timeElapsed = 0;
 		boolean isMaxSize = true;
 		SerializableBlock currentBlock = base;
 
-		for(int i=0; i<grownBlocks.length; i++)
-		{
-			SerializableBlock block = grownBlocks[i];
-			if(block == null)
+		for (SerializableBlock block : grownBlocks) {
+			if (block == null)
 				isMaxSize = false;
 			else
 				currentBlock = block;
@@ -78,12 +77,8 @@ public class OrePlant implements Serializable {
 							newArraySize++;
 					}
 					SerializableBlock[] newArray = new SerializableBlock[newArraySize];
-					for(int i=0; i<newArraySize; i++)
-					{
-						newArray[i] = grownBlocks[i];
-					}
+					System.arraycopy(grownBlocks, 0, newArray, 0, newArraySize);
 					grownBlocks = newArray;
-					stoppedBeforeMaxHeight = true;
 					return;
 				}
 				
@@ -95,11 +90,9 @@ public class OrePlant implements Serializable {
 		}
 		
 		isMaxSize = true;
-		
-		for(int i=0; i<grownBlocks.length; i++)
-		{
-			SerializableBlock block = grownBlocks[i];
-			if(block == null)
+
+		for (SerializableBlock block : grownBlocks) {
+			if (block == null)
 				isMaxSize = false;
 		}
 		

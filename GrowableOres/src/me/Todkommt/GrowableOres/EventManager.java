@@ -1,4 +1,4 @@
-package me.Todkommt.GrowableOres;
+package net.spideynn.bukkit.growableores;
 
 import java.util.List;
 import org.bukkit.ChatColor;
@@ -81,6 +81,11 @@ public class EventManager implements Listener {
 				disabled[6] = true;
 			}
 		}
+        if (!block.getType().equals(Material.SOIL)) {
+            player.sendMessage(ChatColor.GRAY + "[" + ChatColor.GOLD + "GrowableOres" + ChatColor.GRAY + "]" + ChatColor.RED + " You need to plant this on farmland.");
+            //event.setCancelled(true);
+            return;
+        }
 		//plugin.log.info("checking for item");
 		//plugin.log.info("item in hand is " + item.getType().name() + " and amount is " + item.getAmount() + " (price:" + plugin.getConfig().getInt("prices.coal") + ")");
 		if(item.getType().equals(Material.COAL) && item.getAmount() >= plugin.getConfig().getInt("prices.coal"))
@@ -203,6 +208,13 @@ public class EventManager implements Listener {
 			loc.getBlock().setTypeIdAndData(Material.LAPIS_ORE.getId(), (byte)0, true);
 			plugin.plants.add(new OrePlant(loc.getBlock(), plugin.getConfig().getInt("growheights.lapis"), parseFloat(plugin.getConfig().getString("growtimes.lapis")), player.getName()));
 			plugin.savePlants();
+		} else if ((item.getType().equals(Material.INK_SACK) && item.getDurability() == 4)
+                || item.getType().equals(Material.EMERALD)
+                || item.getType().equals(Material.REDSTONE)
+                || item.getType().equals(Material.GOLD_INGOT)
+                || item.getType().equals(Material.IRON_INGOT)
+                || item.getType().equals(Material.COAL)) {
+            player.sendMessage(ChatColor.GRAY + "[" + ChatColor.GOLD + "GrowableOres" + ChatColor.GRAY + "]" + ChatColor.RED + " You don't have enough " + item.getType().toString());
 		}
 	}
 	
@@ -242,7 +254,7 @@ public class EventManager implements Listener {
 						event.setCancelled(true);
 						return;
 					}
-					
+
 					int harvestAmount = 1;
 					
 					for(SerializableBlock block : plant.grownBlocks)
@@ -250,13 +262,13 @@ public class EventManager implements Listener {
 						if(block == null)
 							continue;
 						Block plantBlock = block.getBlock(plugin);
-						plantBlock.setType(Material.AIR);
+						plantBlock.breakNaturally();
 						harvestAmount++;
 					}
-					event.getBlock().setType(Material.AIR);
-					event.setCancelled(true);
+					event.getBlock().breakNaturally();
+					//event.setCancelled(true);
 					//plugin.log.info("type is " + type);
-					player.getInventory().addItem(new ItemStack(type, harvestAmount));
+					//player.getInventory().addItem(new ItemStack(type, harvestAmount));
 					plant.timer.running = false;
 					plugin.plants.remove(plant);
 					break;
@@ -294,14 +306,15 @@ public class EventManager implements Listener {
 								if(serBlock == null)
 									continue;
 								Block plantBlock = serBlock.getBlock(plugin);
-								plantBlock.setTypeIdAndData(Material.AIR.getId(), (byte)0, true);
+								//plantBlock.setTypeIdAndData(Material.AIR.getId(), (byte)0, true);
+                                plantBlock.breakNaturally();
 								harvestAmount++;
 								plant.grownBlocks[i+counter] = null;
 							}
-							
-							event.getBlock().setType(Material.AIR);
-							event.setCancelled(true);
-							player.getInventory().addItem(new ItemStack(type, harvestAmount));
+							event.getBlock().breakNaturally();
+							//event.getBlock().setType(Material.AIR);
+							//event.setCancelled(true);
+							//player.getInventory().addItem(new ItemStack(type, harvestAmount));
 							if(!plant.timer.running)
 							{
 								plant.timer.running = true;

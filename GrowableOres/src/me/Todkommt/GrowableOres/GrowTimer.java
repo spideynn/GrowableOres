@@ -1,24 +1,20 @@
-package me.Todkommt.GrowableOres;
+package net.spideynn.bukkit.growableores;
+
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.Serializable;
 
-public class GrowTimer implements Runnable, Serializable {
+class GrowTimer implements Runnable, Serializable {
 
 	private static final long serialVersionUID = 1406104898463223228L;
 	long timeToGrow;
 	OrePlant plant;
-	public long timeElapsed;
-	public boolean running = true;
+	long timeElapsed;
+	static boolean running = true;
 	
-	public GrowTimer(float timeToGrow, OrePlant plant)
+	GrowTimer(float timeToGrow, OrePlant plant, long timeElapsed)
 	{
-		this.timeToGrow = (long) (timeToGrow*60f);
-		this.plant = plant;
-	}
-	
-	public GrowTimer(float timeToGrow, OrePlant plant, long timeElapsed)
-	{
-		this.timeToGrow = (long) (timeToGrow*60f);
+		this.timeToGrow = (long) (timeToGrow*1f);
 		this.plant = plant;
 		this.timeElapsed = timeElapsed;
 	}
@@ -36,9 +32,15 @@ public class GrowTimer implements Runnable, Serializable {
 			}
 			timeElapsed++;
 			plant.timeElapsed = timeElapsed;
-			//GrowableOres.instance.log.info("elapsedTime = " + timeElapsed + " timeToGrow = " + timeToGrow);
-			if(timeElapsed == timeToGrow)
-				plant.grow(this);
+			final GrowTimer instance = this;
+			//GrowableOres.instance.log.info("loc x: " + plant.base.x + " y: " + plant.base.y + " z: " + plant.base.z + " elapsedTime = " + timeElapsed + " timeToGrow = " + timeToGrow);
+			if(timeElapsed >= timeToGrow)
+                new BukkitRunnable() {
+                    @Override
+                    public void run() {
+                        plant.grow(instance);
+                    }
+                }.runTask(GrowableOres.instance);
 		}
 	}
 

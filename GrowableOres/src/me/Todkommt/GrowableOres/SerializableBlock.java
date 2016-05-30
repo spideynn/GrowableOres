@@ -1,4 +1,4 @@
-package me.Todkommt.GrowableOres;
+package net.spideynn.bukkit.growableores;
 
 import java.io.Serializable;
 
@@ -15,7 +15,7 @@ public class SerializableBlock implements Serializable {
 	public String world;
 	public byte data;
 	public int type;
-	
+
 	public SerializableBlock(Block block)
 	{
 		Location loc = block.getLocation();
@@ -28,7 +28,7 @@ public class SerializableBlock implements Serializable {
 		type = block.getTypeId();
 		//GrowableOres.instance.log.info("parsed type id is " + type);
 	}
-	
+
 	public SerializableBlock(Location loc, int type, byte data)
 	{
 		x = loc.getX();
@@ -38,7 +38,7 @@ public class SerializableBlock implements Serializable {
 		this.data = data;
 		this.type = type;
 	}
-	
+
 	public Block getBlock(GrowableOres plugin)
 	{
 		World world = plugin.getServer().getWorld(this.world);
